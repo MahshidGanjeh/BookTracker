@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.book_item);
 
         //Fetching data using Volley
         StringRequest strReq = new StringRequest(URL, new Response.Listener<String>() {
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 addToRequestQueue(strReq, "dd");
 
         //Setting Up Bottom Navigation
+        /*
         BottomNavigationView bottomNavigationView =
                 (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -55,5 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        */
     }
 }

@@ -5,25 +5,25 @@
     <item
         android:id="@+id/item_home"
         android:enabled="true"
-        android:icon="@mipmap/ic_test"
-        android:title="Home"
-        app:showAsAction="ifRoom"></item>
+        android:icon="@drawable/item_home"
+        android:title="@string/item_home"
+        app:showAsAction="always|withText"></item>
     <item
         android:id="@+id/item_bookshelf"
         android:enabled="true"
-        android:icon="@mipmap/ic_dashboard"
-        android:title="Home"
-        app:showAsAction="ifRoom"></item>
-    <item
-        android:id="@+id/item_dashbard"
-        android:enabled="true"
-        android:icon="@mipmap/ic_dashboard"
-        android:title="Home"
-        app:showAsAction="ifRoom"></item>
+        android:icon="@drawable/item_bookshelf"
+        android:title="@string/item_book_shelf"
+        app:showAsAction="always|withText"></item>
     <item
         android:id="@+id/item_notebook"
         android:enabled="true"
-        android:icon="@mipmap/ic_dashboard"
-        android:title="Home"
-        app:showAsAction="ifRoom"></item>
+        android:icon="@drawable/item_note"
+        android:title="@string/item_note_book"
+        app:showAsAction="always|withText"></item>
+    <item
+        android:id="@+id/item_dashboard"
+        android:enabled="true"
+        android:icon="@drawable/item_dashboard"
+        android:title="@string/item_dashborad"
+        app:showAsAction="always|withText"></item>
 </menu>

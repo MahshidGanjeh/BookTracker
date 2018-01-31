@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BookTracker</string>
+    <string name="item_home">Home</string>
+    <string name="item_book_shelf">BookShelf</string>
+    <string name="item_note_book">NoteBook</string>
+    <string name="item_dashborad">Dashboard</string>
+
 </resources>

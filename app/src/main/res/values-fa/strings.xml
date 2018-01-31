@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <string name="item_home">خانه</string>
+    <string name="item_book_shelf">قفسه کتاب</string>
+    <string name="item_note_book">یادداشت</string>
+    <string name="item_dashborad">چروفایل</string>
+
+</resources>

@@ -2,15 +2,19 @@ package com.example.booktracker;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.booktracker.Networking.Book;
 
 import java.util.ArrayList;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by Hp on 1/8/2018.
@@ -18,12 +22,21 @@ import java.util.ArrayList;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> {
 
-    private ArrayList<Book> mBookList;
+    private ArrayList<Book> BookList;
     private LayoutInflater inflater;
+    private Context context;
 
-    public BookAdapter(ArrayList<Book> mBookList, Context context) {
-        this.mBookList = mBookList;
+    public BookAdapter() {
+
+    }
+
+    public BookAdapter(ArrayList<Book> aBookList, Context context) {
+
+        this.BookList = aBookList;
+
         inflater = LayoutInflater.from(context);
+        this.context = context;
+
     }
 
     @Override
@@ -36,17 +49,21 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
     @Override
     public void onBindViewHolder(myViewHolder holder, int position) {
 
-        for (int i = 0; i < mBookList.size(); i++) {
-            holder.title.setText(mBookList.get(i).getTitle());
-            holder.author.setText(mBookList.get(i).getAuthor());
-            holder.coverImage.setImageResource(mBookList.get(i).getCoverImgUrl());
+        for (int i = 0; i < BookList.size(); i++) {
+            holder.title.setText(BookList.get(position).getTitle());
+            holder.author.setText(BookList.get(position).getAuthor());
+            Glide.with(context)
+                    .load("http://covers.openlibrary.org/b/id/" + BookList.get(position).getCoverImgUrl() + "-M.jpg")
+                    .centerCrop()
+                    .into(holder.coverImage);
+            //holder.coverImage.setImageResource(mBookList.get(i).getCoverImgUrl());
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return mBookList.size();
+        return BookList.size();
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder {

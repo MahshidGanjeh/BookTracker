@@ -8,14 +8,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 import com.example.booktracker.Networking.Book;
 import com.example.booktracker.Networking.VolleySingleton;
 
@@ -31,66 +35,72 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String URL = "https://www.goodreads.com/search.xml?" +
-            "key=GWMAmEgkrVLUHvbMS1oTpQ&q=father%27s";
+    public ImageView imageView;
 
-    private ArrayList<Book> mBookList;
-    String type;
+    public static final String URL = "http://openlibrary.org/subjects/love.json?limit=100";
+    public static String imageUrl = "http://covers.openlibrary.org/b/id/1861101-S.jpg";
+
+    //https://www.goodreads.com/search.xml?" +
+    //"key=GWMAmEgkrVLUHvbMS1oTpQ&q=city%27s
+
+    private ArrayList<Book> mBookList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
+        /*
         setTitle("Home"); //this will set the title of the action bar
         HomeFragment homeFragment = new HomeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, homeFragment, "Home");
         fragmentTransaction.commit();
+        */
 
-
-        /*Fetching data using Volley
+        //Fetching data using Volley
         StringRequest strReq = new StringRequest(URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
-                Log.d("onRes", "we are here");
-                XmlToJson xmlToJson = new XmlToJson.Builder(response).build();
-
-                // OR convert to a Json String
-                String jsonString = xmlToJson.toString();
-
+                //XmlToJson xmlToJson = new XmlToJson.Builder(response).build();
+                //convert to a Json String
+                //String jsonString = xmlToJson.toString();
                 // OR convert to a formatted Json String (with indent & line breaks)
-                String formattedResultJson = xmlToJson.toFormattedString();
-
-                Log.d("tag", formattedResultJson);
+                //String formattedResultJson = ;
 
                 try {
-                    JSONObject jsonObject = new JSONObject(String.valueOf(xmlToJson));
-                    JSONObject goodreadsResponse = jsonObject.getJSONObject("GoodreadsResponse");
-                    JSONObject search = goodreadsResponse.getJSONObject("search");
-                    JSONObject results = search.getJSONObject("results");
-                    JSONArray books = results.getJSONArray("work");
-                    JSONObject first = books.getJSONObject(0);
-                    String test = first.getJSONObject("best_book").getJSONObject("id").getString("title");
-                    if (test != null) {
-                        Log.d("test", test);
-                        type = test;
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray works = jsonObject.getJSONArray("works");
+
+                    Book[] books = new Book[99];
+
+                    for (int i = 0; i < 30; i++) {
+
+                        if ((Object) works.getJSONObject(i).getInt("cover_id") == null)
+                            break;
+                        books[i] = new Book(works.getJSONObject(i).getString("title"),
+                                works.getJSONObject(i).getJSONArray("authors").getJSONObject(0).getString("name"),
+                                works.getJSONObject(i).getInt("cover_id"));
+                        mBookList.add(books[i]);
+                        Log.d("AAA", String.valueOf(mBookList.size()));
+
                     }
 
-                    //  JSONObject bestbook = first.getJSONObject("best_book");
-                    //  JSONObject id = bestbook.getJSONObject("id");
-                    // String title = id.getString("title");
+                    BookAdapter adapter = new BookAdapter(mBookList, getApplicationContext());
+                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(
+                            new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
+                    Log.d("fucked", String.valueOf(mBookList.size()));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                mBookList = new ArrayList<>();
             }
         }, new Response.ErrorListener() {
 
@@ -104,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         // Adding String request to request queue
         VolleySingleton.getInstance(getApplicationContext()).
                 addToRequestQueue(strReq, "dd");
-    */
+
 
         //Setting Up Bottom Navigation
         BottomNavigationView bottomNavigationView =
@@ -119,9 +129,6 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.getItemId()) {
 
                             case R.id.item_home:
-                                if (type != null) {
-                                    Toast.makeText(getApplicationContext(), type, Toast.LENGTH_LONG).show();
-                                }
                                 setTitle("Home"); //this will set the title of the action bar
                                 HomeFragment homeFragment = new HomeFragment();
                                 FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -184,3 +191,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+

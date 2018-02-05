@@ -39,6 +39,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="5dp"
+        android:textColor="@android:color/darker_gray"
         android:text="by Cormac McCarty"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
         app:layout_constraintHorizontal_bias="0.0"

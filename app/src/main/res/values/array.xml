@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="pref_categories_options">
+        <item>Love</item>
+        <item>Horror</item>
+        <item>Fiction</item>
+        <item>Classics</item>
+        <item>Philosophy</item>
+    </array>
+
+    <array name="pref_categories_values">
+        <item>love</item>
+        <item>horror</item>
+        <item>fiction</item>
+        <item>classics</item>
+        <item>philosophy</item>
+    </array>
+
+</resources>

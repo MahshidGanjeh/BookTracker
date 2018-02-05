@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <EditTextPreference
+        android:defaultValue="5"
+        android:inputType="number"
+        android:key="daily_pages_editText"
+        android:title="Set a daily goal">
+
+    </EditTextPreference>
+
+    <ListPreference
+        android:defaultValue="philosophy"
+        android:entries="@array/pref_categories_options"
+        android:entryValues="@array/pref_categories_values"
+        android:key="favorite_category_listPref"
+        app:title="Select your favorite category">
+
+    </ListPreference>
+</PreferenceScreen>

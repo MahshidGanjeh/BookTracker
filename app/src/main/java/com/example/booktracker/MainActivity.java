@@ -1,5 +1,6 @@
 package com.example.booktracker;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public ImageView imageView;
 
-    public static final String URL = "http://openlibrary.org/subjects/love.json?limit=100";
+    public static final String URL = "http://openlibrary.org/subjects/philosophy.json?limit=100";
     public static String imageUrl = "http://covers.openlibrary.org/b/id/1861101-S.jpg";
 
     //https://www.goodreads.com/search.xml?" +
@@ -77,16 +79,18 @@ public class MainActivity extends AppCompatActivity {
 
                     Book[] books = new Book[99];
 
-                    for (int i = 0; i < 30; i++) {
+                    for (int i = 0; i < 90; i++) {
 
-                        if ((Object) works.getJSONObject(i).getInt("cover_id") == null)
-                            break;
-                        books[i] = new Book(works.getJSONObject(i).getString("title"),
-                                works.getJSONObject(i).getJSONArray("authors").getJSONObject(0).getString("name"),
-                                works.getJSONObject(i).getInt("cover_id"));
-                        mBookList.add(books[i]);
-                        Log.d("AAA", String.valueOf(mBookList.size()));
+                        if ((Object) works.getJSONObject(i).getString("cover_id") == "null") {
+                            continue;
+                        } else {
+                            books[i] = new Book(works.getJSONObject(i).getString("title"),
+                                    works.getJSONObject(i).getJSONArray("authors").getJSONObject(0).getString("name"),
+                                    works.getJSONObject(i).getInt("cover_id"));
+                            mBookList.add(books[i]);
+                            Log.d("AAA", String.valueOf(mBookList.size()));
 
+                        }
                     }
 
                     BookAdapter adapter = new BookAdapter(mBookList, getApplicationContext());
@@ -166,6 +170,26 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+    }
+
+    //menu
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.setting_item) {
+            Intent intentToSetting = new Intent(this, SettingActivity.class);
+            startActivity(intentToSetting);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //A method that fix the size of each item in the bottom navigation view

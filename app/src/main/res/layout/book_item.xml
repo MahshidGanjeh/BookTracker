@@ -28,7 +28,7 @@
         android:layout_marginTop="8dp"
         android:text="The Road"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorAccent"
+        android:textColor="#000"
         app:layout_constraintLeft_toRightOf="@+id/book_cover_iv"
         app:layout_constraintTop_toTopOf="parent" />
 

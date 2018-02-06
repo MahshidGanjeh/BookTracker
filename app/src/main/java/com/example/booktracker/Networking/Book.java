@@ -8,6 +8,7 @@ public class Book {
     private String title;
     private String author;
     private int coverImgUrl;
+    private int numberOfPage;
 
     public Book() {
 
@@ -43,4 +44,11 @@ public class Book {
         this.coverImgUrl = i;
     }
 
+    public int getNumberOfPage() {
+        return numberOfPage;
+    }
+
+    public void setNumberOfPage(int numberOfPage) {
+        this.numberOfPage = numberOfPage;
+    }
 }

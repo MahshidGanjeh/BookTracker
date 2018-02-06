@@ -7,6 +7,8 @@
         <item>Fiction</item>
         <item>Classics</item>
         <item>Philosophy</item>
+        <item>Biography</item>
+        <item>Gothic</item>
     </array>
 
     <array name="pref_categories_values">
@@ -15,6 +17,8 @@
         <item>fiction</item>
         <item>classics</item>
         <item>philosophy</item>
+        <item>biography</item>
+        <item>gothic</item>
     </array>
 
 </resources>

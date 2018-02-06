@@ -1,6 +1,7 @@
 package com.example.booktracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -9,6 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,11 +38,13 @@ import java.util.ArrayList;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
-public class MainActivity extends AppCompatActivity {
+//we implement onSharedPref because we want whenever a pref value changes ,
+//the booklist automatically be updated
+public class MainActivity extends AppCompatActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public ImageView imageView;
-
-    public static final String URL = "http://openlibrary.org/subjects/philosophy.json?limit=100";
+    public static String category = "";
+    public static String URL = "http://openlibrary.org/subjects/" + category + ".json?limit=100";
     public static String imageUrl = "http://covers.openlibrary.org/b/id/1861101-S.jpg";
 
     //https://www.goodreads.com/search.xml?" +
@@ -52,72 +57,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
         setTitle("Home"); //this will set the title of the action bar
         HomeFragment homeFragment = new HomeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, homeFragment, "Home");
         fragmentTransaction.commit();
-        */
-
-        //Fetching data using Volley
-        StringRequest strReq = new StringRequest(URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                //XmlToJson xmlToJson = new XmlToJson.Builder(response).build();
-                //convert to a Json String
-                //String jsonString = xmlToJson.toString();
-                // OR convert to a formatted Json String (with indent & line breaks)
-                //String formattedResultJson = ;
-
-                try {
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray works = jsonObject.getJSONArray("works");
-
-                    Book[] books = new Book[99];
-
-                    for (int i = 0; i < 90; i++) {
-
-                        if ((Object) works.getJSONObject(i).getString("cover_id") == "null") {
-                            continue;
-                        } else {
-                            books[i] = new Book(works.getJSONObject(i).getString("title"),
-                                    works.getJSONObject(i).getJSONArray("authors").getJSONObject(0).getString("name"),
-                                    works.getJSONObject(i).getInt("cover_id"));
-                            mBookList.add(books[i]);
-                            Log.d("AAA", String.valueOf(mBookList.size()));
-
-                        }
-                    }
-
-                    BookAdapter adapter = new BookAdapter(mBookList, getApplicationContext());
-                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-                    recyclerView.setAdapter(adapter);
-                    recyclerView.setLayoutManager(
-                            new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-
-                    Log.d("fucked", String.valueOf(mBookList.size()));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("VolleyError is", "Error: " + error.getMessage());
-            }
-        });
-
-
-        // Adding String request to request queue
-        VolleySingleton.getInstance(getApplicationContext()).
-                addToRequestQueue(strReq, "dd");
 
 
         //Setting Up Bottom Navigation
@@ -173,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //menu
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -213,6 +157,37 @@ public class MainActivity extends AppCompatActivity {
         } catch (IllegalAccessException e) {
             Log.e("BottomNav", "Unable to change value of shift mode", e);
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        String value = sharedPreferences.getString(key, "");
+
+        if (key == "favorite_category_listPref") {
+            category = value;
+            URL = "http://openlibrary.org/subjects/" + category + ".json?limit=100";
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        Log.d("destroy", "onDestroy is called");
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d("start", "onStart is called");
+        super.onStart();
+    }
+
+    @Override
+    protected void onPostResume() {
+        Log.d("resume", "onResume is called");
+        super.onPostResume();
     }
 }
 

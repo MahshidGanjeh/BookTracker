@@ -53,6 +53,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
             holder.title.setText(BookList.get(position).getTitle());
             holder.author.setText(BookList.get(position).getAuthor());
             //Loading images using Glide Library
+            //we pass the book_cover_id to do so
             Glide.with(context)
                     .load("http://covers.openlibrary.org/b/id/" + BookList.get(position).getCoverImgUrl() + "-M.jpg")
                     .centerCrop()

@@ -2,6 +2,7 @@ package com.example.booktracker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -57,12 +58,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setTitle("Home"); //this will set the title of the action bar
+        setTitle(getString(R.string.item_home)); //this will set the title of the action bar
         HomeFragment homeFragment = new HomeFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, homeFragment, "Home");
         fragmentTransaction.commit();
+
 
 
         //Setting Up Bottom Navigation
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity
                         switch (item.getItemId()) {
 
                             case R.id.item_home:
-                                setTitle("Home"); //this will set the title of the action bar
+                                setTitle(getString(R.string.item_home)); //this will set the title of the action bar
                                 HomeFragment homeFragment = new HomeFragment();
                                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                                 FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity
                                 fragmentTransaction1.commit();
                                 break;
                             case R.id.item_bookshelf:
-                                setTitle("Bookshelf"); //this will set the title of the action bar
+                                setTitle(getString(R.string.item_book_shelf)); //this will set the title of the action bar
                                 BookShelfFragment bookShelfFragment = new BookShelfFragment();
                                 FragmentManager fragmentManager2 = getSupportFragmentManager();
                                 FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity
                                 fragmentTransaction2.commit();
                                 break;
                             case R.id.item_notebook:
-                                setTitle("NoteBook"); //this will set the title of the action bar
+                                setTitle(getString(R.string.item_note_book)); //this will set the title of the action bar
                                 NoteFragment noteFragment = new NoteFragment();
                                 FragmentManager fragmentManager3 = getSupportFragmentManager();
                                 FragmentTransaction fragmentTransaction3 = fragmentManager3.beginTransaction();
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity
                                 fragmentTransaction3.commit();
                                 break;
                             case R.id.item_dashboard:
-                                setTitle("Dashboard"); //this will set the title of the action bar
+                                setTitle(getString(R.string.item_dashborad)); //this will set the title of the action bar
                                 DashBoardFragment dFragment = new DashBoardFragment();
                                 FragmentManager fragmentManager4 = getSupportFragmentManager();
                                 FragmentTransaction fragmentTransaction4 = fragmentManager4.beginTransaction();
@@ -132,6 +134,9 @@ public class MainActivity extends AppCompatActivity
             Intent intentToSetting = new Intent(this, SettingActivity.class);
             startActivity(intentToSetting);
             return true;
+        }if(id == R.id.search_item){
+
+
         }
         return super.onOptionsItemSelected(item);
     }

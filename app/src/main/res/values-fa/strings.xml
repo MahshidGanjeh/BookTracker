@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name">کتاب</string>
+    <string name="title_activity_setting">تنظیمات</string>
+    <string name="title_item_setting">تنظیمات</string>
+    <string name="title_edit_text_pref">تعیین هدف روزانه</string>
+    <string name="title_list_pref">ژانر موردعلاقه</string>
+
+    <!--Options of Tab Layout-->
+    <string name="tab_reading">درحال مطالعه</string>
+    <string name="tab_toRead">برای مطالعه</string>
+    <string name="tab_read">مطالعه شده</string>
+
+    <!--Options of bottom navigation-->
     <string name="item_home">خانه</string>
     <string name="item_book_shelf">قفسه کتاب</string>
     <string name="item_note_book">یادداشت</string>
-    <string name="item_dashborad">چروفایل</string>
+    <string name="item_dashborad">پروفایل</string>
+
+    <!-- Array options of listpreference-->
+    <string name="category_love">عشق</string>
+    <string name="category_horror">ترسناک</string>
+    <string name="category_philosophy">فلسفه</string>
+    <string name="category_fiction">تخیلی</string>
+    <string name="category_classics">کلاسیک</string>
+    <string name="category_biography">زندگی نامه</string>
+    <string name="category_gothic">حاشیه</string>
+
+
+    <!--Array values of listpreference-->
+    <string name="value_love">عاشقانه</string>
+    <string name="value_horror">ترسناک</string>
+    <string name="value_philosophy">فلسفه</string>
+    <string name="value_fiction">تخیلی</string>
+    <string name="value_classics">کلاسیک</string>
+    <string name="value_biography">زندگی نامه</string>
+    <string name="value_gothic">حاشیه</string>
+    <string name="value_default">عاشقانه</string>
+
 
 </resources>

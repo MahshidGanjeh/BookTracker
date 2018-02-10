@@ -7,15 +7,14 @@
         android:defaultValue="5"
         android:inputType="number"
         android:key="daily_pages_editTextPref"
-        android:title="Set a daily goal">
-    </EditTextPreference>
+        android:title="@string/title_edit_text_pref"></EditTextPreference>
 
     <ListPreference
-        android:defaultValue="philosophy"
+        android:defaultValue="@string/value_default"
         android:entries="@array/pref_categories_options"
         android:entryValues="@array/pref_categories_values"
         android:key="favorite_category_listPref"
-        android:title="Select your favorite category">
+        android:title="@string/title_list_pref">
 
     </ListPreference>
 </PreferenceScreen>

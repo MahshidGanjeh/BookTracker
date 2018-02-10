@@ -30,11 +30,12 @@ public class BookContract {
         public static final String COLUMN_UID = "id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_EMAIL = "email";
-        public static final String COLUMN_TOTALHOURS = "totalOurs";
+        public static final String COLUMN_TOTALHOURS = "totalHours";
         public static final String COLUMN_TOTALBOOKS = "totalBooks";
 
         //Read table columns
-        public static final String COLUMN_RID = "id";
+        public static final String COLUMN_RBID = "bid";
+        public static final String COLUMN_RCID = "cid";
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_STARTDATE = "startDate";
 

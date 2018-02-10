@@ -2,23 +2,23 @@
 <resources>
 
     <array name="pref_categories_options">
-        <item>Love</item>
-        <item>Horror</item>
-        <item>Fiction</item>
-        <item>Classics</item>
-        <item>Philosophy</item>
-        <item>Biography</item>
-        <item>Gothic</item>
+        <item>@string/category_biography</item>
+        <item>@string/category_classics</item>
+        <item>@string/category_fiction</item>
+        <item>@string/category_gothic</item>
+        <item>@string/category_horror</item>
+        <item>@string/category_love</item>
+        <item>@string/category_philosophy</item>
     </array>
 
     <array name="pref_categories_values">
-        <item>love</item>
-        <item>horror</item>
-        <item>fiction</item>
-        <item>classics</item>
-        <item>philosophy</item>
-        <item>biography</item>
-        <item>gothic</item>
+        <item>@string/value_biography</item>
+        <item>@string/value_classics</item>
+        <item>@string/value_fiction</item>
+        <item>@string/value_gothic</item>
+        <item>@string/value_horror</item>
+        <item>@string/value_love</item>
+        <item>@string/value_philosophy</item>
     </array>
 
 </resources>

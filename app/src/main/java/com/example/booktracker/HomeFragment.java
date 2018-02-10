@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.android.volley.Response;
@@ -20,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.example.booktracker.Database.Database;
 import com.example.booktracker.Networking.Book;
 import com.example.booktracker.Networking.VolleySingleton;
 
@@ -35,7 +37,7 @@ public class HomeFragment extends Fragment implements
 
     private ArrayList<Book> mBookList = new ArrayList<>();
 
-    public static String category = "";
+    public static String category = "love";
     public static String URL = "http://openlibrary.org/subjects/" + category + ".json?limit=100";
 
     public HomeFragment() {
@@ -45,6 +47,7 @@ public class HomeFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         final View resultView = inflater.inflate(R.layout.fragment_home, container, false);
 
         //Setting Up SharedPreference in order to update list based on user favorite genre
@@ -56,6 +59,7 @@ public class HomeFragment extends Fragment implements
 
         //Fetching data using Volley
         StringRequest strReq = new StringRequest(URL, new Response.Listener<String>() {
+
             @Override
             public void onResponse(String response) {
                 //XmlToJson xmlToJson = new XmlToJson.Builder(response).build();
@@ -71,8 +75,9 @@ public class HomeFragment extends Fragment implements
 
                     Book[] books = new Book[99];
 
-                    for (int i = 0; i < 90; i++) {
 
+                    for (int i = 0; i < 90; i++) {
+                        Log.d("viola" ,works.getJSONObject(i).getString("cover_id") );
                         if ((Object) works.getJSONObject(i).getString("cover_id") == "null") {
                             continue;
                         } else {
@@ -80,6 +85,7 @@ public class HomeFragment extends Fragment implements
                                     works.getJSONObject(i).getJSONArray("authors").getJSONObject(0).getString("name"),
                                     works.getJSONObject(i).getInt("cover_id"));
                             mBookList.add(books[i]);
+                            Log.d("viola" ,books[0].getTitle() );
                         }
                     }
 
@@ -107,6 +113,7 @@ public class HomeFragment extends Fragment implements
         // Adding String request to request queue
         VolleySingleton.getInstance(getContext()).
                 addToRequestQueue(strReq, "dd");
+
 
         return resultView;
     }

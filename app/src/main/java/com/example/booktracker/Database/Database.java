@@ -1,8 +1,10 @@
 package com.example.booktracker.Database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.booktracker.Networking.Book;
 
@@ -16,6 +18,7 @@ public class Database extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
     public Database(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -23,7 +26,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         String SQL_CREATE_BOOK_TABLE =
-                " create table " + BookContract.BookContent.TABLE1_NAME + " ("
+                " create table if not exist " + BookContract.BookContent.TABLE1_NAME + " ("
 
                         + BookContract.BookContent.COLUMN_BID + " integer primary key autoincrement, "
                         + BookContract.BookContent.COLUMN_TITLE + " nvarchar(80), "
@@ -36,7 +39,7 @@ public class Database extends SQLiteOpenHelper {
                         + ") ;";
 
         String SQL_CREATE_USER_TABLE =
-                " create table " + BookContract.BookContent.TABlE2_NAME + " ("
+                " create table if not exist" + BookContract.BookContent.TABlE2_NAME + " ("
 
                         + BookContract.BookContent.COLUMN_UID + " integer primary key autoincrement, "
                         + BookContract.BookContent.COLUMN_NAME + " nvarchar(20), "
@@ -46,15 +49,17 @@ public class Database extends SQLiteOpenHelper {
                         + ");";
 
         String SQL_CREATE_READ_TABLE =
-                " create table " + BookContract.BookContent.TABlE3_NAME + " ("
+                " create table if not exist" + BookContract.BookContent.TABlE3_NAME + " ("
 
-                        + BookContract.BookContent.COLUMN_BID + " integer autoincrement, "
-                        + BookContract.BookContent.COLUMN_UID + " integer autoincrement, "
+                        + BookContract.BookContent.COLUMN_RBID + " integer, "
+                        + BookContract.BookContent.COLUMN_RCID + " integer, "
                         + BookContract.BookContent.COLUMN_STATUS + " nvarchar(20), "
                         + BookContract.BookContent.COLUMN_STARTDATE + " nvarchar(20), "
-                        + " BID references book (BID), "
-                        + " UID references user (UID), "
-                        + " primary key (BID , UID) "
+                        + " foreign key ( " + BookContract.BookContent.COLUMN_RBID + " ) references " +
+                        BookContract.BookContent.TABLE1_NAME + "(" + BookContract.BookContent.COLUMN_BID + " ), "
+                        + " foreign key ( " + BookContract.BookContent.COLUMN_RCID + " ) references " +
+                        BookContract.BookContent.TABlE2_NAME + "(" + BookContract.BookContent.COLUMN_UID + " ), "
+                        + " primary key ( " + BookContract.BookContent.COLUMN_RBID + "," + BookContract.BookContent.COLUMN_RCID + " ) "
                         + ");";
 
 
@@ -70,5 +75,23 @@ public class Database extends SQLiteOpenHelper {
         //db.execSQL("DROP TABLE IF EXISTS " + BookContract.BookContent.TABLE2_NAME);
         //db.execSQL("DROP TABLE IF EXISTS " + BookContract.BookContent.TABLE3_NAME);
         onCreate(db);
+    }
+
+    public boolean insertBookToDb(Book book) {
+
+        Log.d("place", "in the insertBookMethod");
+        boolean successfulInsert;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("Title", book.getTitle());
+        contentValues.put("Author", book.getAuthor());
+        contentValues.put("CoverId", book.getCoverImgUrl());
+        //contentValues.put("NumberOfPage", book.getNumberOfPage());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        successfulInsert = db.insert(BookContract.BookContent.TABLE1_NAME, null, contentValues) > 0;
+
+        db.close();
+
+        return successfulInsert;
     }
 }

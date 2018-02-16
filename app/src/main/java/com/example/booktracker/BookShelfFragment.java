@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.booktracker.Database.Database;
+
 
 public class BookShelfFragment extends Fragment {
 
@@ -48,8 +50,18 @@ public class BookShelfFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            PagerFragment pagerFragment = new PagerFragment();
-            return pagerFragment;
+
+            Fragment fragment = null;
+            if (position == 0) {
+                fragment = new PagerFragment();
+            }
+            if (position == 1) {
+                fragment = new ReadingFragment();
+            }
+            if (position == 2) {
+                fragment = new ReadFragment();
+            }
+            return fragment;
         }
 
         @Override
@@ -60,9 +72,9 @@ public class BookShelfFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return getString(R.string.tab_reading);
-            } else if (position == 1) {
                 return getString(R.string.tab_toRead);
+            } else if (position == 1) {
+                return getString(R.string.tab_reading);
             } else if (position == 2) {
                 return getString(R.string.tab_read);
             }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,6 +37,7 @@ public class HomeFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ArrayList<Book> mBookList = new ArrayList<>();
+    private ProgressBar mProgressBar;
 
     public static String category = "love";
     public static String URL = "http://openlibrary.org/subjects/" + category + ".json?limit=100";
@@ -46,16 +48,24 @@ public class HomeFragment extends Fragment implements
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         final View resultView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        mProgressBar = (ProgressBar) resultView.findViewById(R.id.progress_bar);
+
+
         //Setting Up SharedPreference in order to update list based on user favorite genre
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.
+                getDefaultSharedPreferences(getContext());
 
         category = sharedPreferences.getString("favorite_category_listPref", "");
         URL = "http://openlibrary.org/subjects/" + category + ".json?limit=100";
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+
+        mProgressBar.setVisibility(View.VISIBLE);
 
         //Fetching data using Volley
         StringRequest strReq = new StringRequest(URL, new Response.Listener<String>() {
@@ -75,9 +85,7 @@ public class HomeFragment extends Fragment implements
 
                     Book[] books = new Book[99];
 
-
                     for (int i = 0; i < 90; i++) {
-                        Log.d("viola" ,works.getJSONObject(i).getString("cover_id") );
                         if ((Object) works.getJSONObject(i).getString("cover_id") == "null") {
                             continue;
                         } else {
@@ -85,7 +93,6 @@ public class HomeFragment extends Fragment implements
                                     works.getJSONObject(i).getJSONArray("authors").getJSONObject(0).getString("name"),
                                     works.getJSONObject(i).getInt("cover_id"));
                             mBookList.add(books[i]);
-                            Log.d("viola" ,books[0].getTitle() );
                         }
                     }
 
@@ -95,7 +102,7 @@ public class HomeFragment extends Fragment implements
                     recyclerView.setLayoutManager(
                             new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-                    Log.d("fucked", String.valueOf(mBookList.size()));
+                    mProgressBar.setVisibility(View.GONE);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -113,7 +120,6 @@ public class HomeFragment extends Fragment implements
         // Adding String request to request queue
         VolleySingleton.getInstance(getContext()).
                 addToRequestQueue(strReq, "dd");
-
 
         return resultView;
     }

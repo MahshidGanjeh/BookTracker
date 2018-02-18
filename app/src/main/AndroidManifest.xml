@@ -21,7 +21,9 @@
         </activity>
         <activity
             android:name=".SettingActivity"
-            android:label="@string/title_activity_setting"></activity>
+            android:label="@string/title_activity_setting" />
+
+        <activity android:name=".BookDetailActivity"></activity>
     </application>
 
 </manifest>

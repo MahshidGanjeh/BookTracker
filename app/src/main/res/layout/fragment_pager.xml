@@ -5,7 +5,7 @@
     android:background="#E0E0E0"
     tools:context="com.example.booktracker.PagerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reading_book_recycler_view"
         android:layout_width="match_parent"

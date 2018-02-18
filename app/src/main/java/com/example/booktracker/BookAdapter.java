@@ -9,6 +9,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.example.booktracker.Database.Database;
+import com.example.booktracker.Database.BookDatabase;
 import com.example.booktracker.Networking.Book;
 
 import java.util.ArrayList;
@@ -28,19 +29,51 @@ import static java.security.AccessController.getContext;
  * Created by Hp on 1/8/2018.
  */
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> {
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder>
+        implements RecyclerView.OnItemTouchListener {
 
     private ArrayList<Book> BookList;
     private LayoutInflater inflater;
     private Context context;
+    private AdapterLister mAdapterListener;
     Typeface type;
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        View childView = rv.findChildViewUnder(e.getX(), e.getY());
+
+        if (childView != null && mAdapterListener != null) {
+            mAdapterListener.handler(rv.getChildAdapterPosition(childView));
+        }
+
+        return false;
+
+    }
+
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
+    public interface AdapterLister {
+
+        public void handler(int position);
+    }
+
 
     public BookAdapter() {
 
     }
 
-    public BookAdapter(ArrayList<Book> aBookList, Context context) {
+    public BookAdapter(ArrayList<Book> aBookList, Context context, AdapterLister mAdapterLister) {
 
+        this.mAdapterListener = mAdapterLister;
         this.BookList = aBookList;
         inflater = LayoutInflater.from(context);
         this.context = context;
@@ -54,8 +87,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
 
         //fonts
         // type = Typeface.createFromAsset(context.getAssets(), "font/DancingScript-Regular.ttf");
-
-
         return myViewHolder;
     }
 
@@ -72,45 +103,23 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
                     .load("http://covers.openlibrary.org/b/id/" + BookList.get(position).getCoverImgUrl() + "-M.jpg")
                     .centerCrop()
                     .into(holder.coverImage);
-
-            /*
-            trying to convert imageView to bitmap in order to get the main backgraound color
-            if (position == 1) {
-                ImageView imageView = holder.coverImage;
-
-                Bitmap bitmap;
-                if (imageView.getDrawable() instanceof BitmapDrawable) {
-                    bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                } else {
-                    Drawable d = imageView.getDrawable();
-                    bitmap = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                   // Canvas canvas = new Canvas(bitmap);
-                   // d.draw(canvas);
-                }
-
-                //imageView.buildDrawingCache();
-
-              //  BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-              //  Bitmap bitmap = drawable.getBitmap();
-                //Bitmap bmap = imageView.getDrawingCache();
-                Log.d("Pal", Palette.generate(bitmap).toString());
-            }*/
-            //holder.coverImage.setImageResource(mBookList.get(i).getCoverImgUrl());
         }
+    }
 
-        holder.addToBookshelf.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public int getItemCount() {
+        return BookList.size();
+    }
+            /*
+
+      holder.addToBookshelf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Database db = new Database(context);
+                BookDatabase db = new BookDatabase(context);
 
                 db.insertBookToDb(BookList.get(position));
 
-                //db.selectToReadBooks();
-
-                String id = String.valueOf(db.selectBookId(BookList.get(position).getTitle()));
-
-                Log.d("kkk", id);
                 Toast.makeText(context, BookList.get(position).getTitle() + " " +
                         "has been added to bookshelf successfully", Toast.LENGTH_SHORT).show();
                 db.close();
@@ -119,7 +128,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
             }
         });
 
-/*
+
         holder.coverImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,15 +143,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
                 }
             }
         });
+
+    }
 */
-    }
 
-    @Override
-    public int getItemCount() {
-        return BookList.size();
-    }
 
-    public class myViewHolder extends RecyclerView.ViewHolder {
+    public class myViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
 
         private TextView title;
         private TextView author;
@@ -151,13 +158,28 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder> 
         // private ImageView addToBookshelf;
 
         public myViewHolder(View itemView) {
+
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.book_title_tv);
             author = (TextView) itemView.findViewById(R.id.book_author_tv);
             coverImage = (ImageView) itemView.findViewById(R.id.book_cover_iv);
-            addToBookshelf = (TextView) itemView.findViewById(R.id.add_to_bookshelf_imgbtn);
+
+            //set the listener fo each viewHolder
+            itemView.setOnClickListener(this);
+
+            // addToBookshelf = (TextView) itemView.findViewById(R.id.add_to_bookshelf_imgbtn);
 
             //title.setTypeface(type);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            int position = getPosition();
+
+            Toast.makeText(context, "position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+            mAdapterListener.handler(position);
 
         }
     }

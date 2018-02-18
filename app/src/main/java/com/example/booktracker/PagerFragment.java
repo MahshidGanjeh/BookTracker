@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.booktracker.Database.Database;
+import com.example.booktracker.Database.BookDatabase;
 
 
 /**
@@ -29,11 +29,11 @@ public class PagerFragment extends Fragment {
         // Inflate the layout for this fragment
         View resultView = inflater.inflate(R.layout.fragment_pager, container, false);
 
-        Database db = new Database(getContext());
+        BookDatabase db = new BookDatabase(getContext());
 
-        if (db.selectToReadBook() != null) {
+        if (db.selectToReadBooks() != null) {
 
-            BookAdapter readingBookAdapter = new BookAdapter(db.selectToReadBook(), getContext());
+            ToReadBookAdapter readingBookAdapter = new ToReadBookAdapter(db.selectToReadBooks(), getContext());
             RecyclerView recyclerView = (RecyclerView) resultView.findViewById(R.id.reading_book_recycler_view);
             recyclerView.setAdapter(readingBookAdapter);
             recyclerView.setLayoutManager(

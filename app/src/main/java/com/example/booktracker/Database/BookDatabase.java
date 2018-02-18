@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * Created by Hp on 2/6/2018.
  */
 
-public class Database extends SQLiteOpenHelper {
+public class BookDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "book.db";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 6;
 
-    public Database(Context context) {
+    public BookDatabase(Context context) {
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -89,8 +89,9 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         boolean successfulInsert;
-
+        int id = 0;
         ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
         contentValues.put(BookContract.BookContent.COLUMN_TITLE, book.getTitle());
         contentValues.put(BookContract.BookContent.COLUMN_AUTHOR, book.getAuthor());
@@ -99,38 +100,28 @@ public class Database extends SQLiteOpenHelper {
 
         db.insert(BookContract.BookContent.TABLE1_NAME, null, contentValues);
 
-        ContentValues cv = new ContentValues();
+        //get the id of the inserted book in order to add it to the read table
+        String rawQuery2 = " select " + BookContract.BookContent.COLUMN_BID +
+                " from " + BookContract.BookContent.TABLE1_NAME + " where "
+                + BookContract.BookContent.TABLE1_NAME + "." + BookContract.BookContent.COLUMN_TITLE + " = " +
+                "'" + book.getTitle() + "'";
+
+        Cursor cursor = db.rawQuery(rawQuery2, null);
+
+        if (cursor.moveToFirst()) {
+            id = Integer.valueOf(cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_BID)));
+        }
         //user id
         cv.put(BookContract.BookContent.COLUMN_RCID, 1);
+        cv.put(BookContract.BookContent.COLUMN_RBID, id);
         cv.put(BookContract.BookContent.COLUMN_STATUS, "ToRead");
 
         successfulInsert = db.insert(BookContract.BookContent.TABlE3_NAME, null, cv) > 0;
-        Log.d("hhhh", String.valueOf(successfulInsert));
 
         db.close();
 
         return successfulInsert;
     }
-
-    //give the title of the book and it will return id of that
-    public int selectBookId(String bookTitle) {
-
-        int id = 0;
-
-        SQLiteDatabase database = this.getWritableDatabase();
-
-        String rawQuery2 = " select " + BookContract.BookContent.COLUMN_BID +
-                " from " + BookContract.BookContent.TABLE1_NAME + " where "
-                + BookContract.BookContent.COLUMN_TITLE + " = " + bookTitle;
-
-        Cursor cursor = database.rawQuery(rawQuery2, null);
-
-        if (cursor.moveToFirst()) {
-            id = Integer.valueOf(cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_BID)));
-        }
-        return id;
-    }
-
 
     public boolean deleteBook(String title) {
 
@@ -142,11 +133,11 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public void selectToReadBooks() {
+    public void selectToReadBook() {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String rawQuery = " select " + BookContract.BookContent.COLUMN_RCID +
+        String rawQuery = " select " + BookContract.BookContent.COLUMN_RBID +
                 " from " + BookContract.BookContent.TABlE3_NAME;
 
         Cursor cursor = db.rawQuery(rawQuery, null);
@@ -154,22 +145,21 @@ public class Database extends SQLiteOpenHelper {
         int rowCount = cursor.getCount();
 
         if (cursor.moveToFirst()) {
-            String n = cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_RCID));
-            if (n != null) {
-                Log.d("row", n);
-            }
+            do {
+                String n = cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_RBID));
+                if (n != null) {
+                    Log.d("row", n);
+                }
+            } while (cursor.moveToNext());
         }
-
     }
 
-    public ArrayList<Book> selectToReadBook() {
+    //for showing books in the bookshelf we (Query) select the database to get the books information
+    //that have been inserted before
+
+    public ArrayList<Book> selectToReadBooks() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-
-        String rawQuery2 = " select " + BookContract.BookContent.COLUMN_TITLE + ", " +
-                BookContract.BookContent.COLUMN_AUTHOR + ", " + BookContract.BookContent.COLUMN_COVERID + ", " +
-                BookContract.BookContent.COLUMN_BID +
-                " from " + BookContract.BookContent.TABLE1_NAME;
 
         //select title, author, coverId from book inner join read on book.id = read.bid where status = ToRead
         String rawQuery = " select " + BookContract.BookContent.COLUMN_TITLE + ", " +
@@ -177,16 +167,15 @@ public class Database extends SQLiteOpenHelper {
                 " from " + BookContract.BookContent.TABLE1_NAME + " inner join " + BookContract.BookContent.TABlE3_NAME
                 + " on " + BookContract.BookContent.TABLE1_NAME + "." + BookContract.BookContent.COLUMN_BID +
                 " = " + BookContract.BookContent.TABlE3_NAME + "." + BookContract.BookContent.COLUMN_RBID
-                + " where " + BookContract.BookContent.COLUMN_STATUS + " = ToRead ";
+                + " where " + BookContract.BookContent.COLUMN_STATUS + " = 'ToRead' ";
 
-        Cursor cursor = db.rawQuery(rawQuery2, null);
+        Cursor cursor = db.rawQuery(rawQuery, null);
 
-        int columnCount = cursor.getCount();
+        int numberOfRows = cursor.getCount();
 
-        Log.d("columnCount", String.valueOf(columnCount));
+        Log.d("numberOfRows", String.valueOf(numberOfRows));
 
-        Book[] books = new Book[columnCount];
-
+        Book[] books = new Book[numberOfRows];
         ArrayList<Book> b = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -207,7 +196,7 @@ public class Database extends SQLiteOpenHelper {
                 b.add(books[i]);
                 i++;
             }
-            while (cursor.moveToNext() && i != cursor.getCount());
+            while (cursor.moveToNext() && i != numberOfRows);
         }
 
         cursor.close();

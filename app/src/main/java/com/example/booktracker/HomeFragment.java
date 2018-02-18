@@ -1,12 +1,14 @@
 package com.example.booktracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.example.booktracker.Database.Database;
 import com.example.booktracker.Networking.Book;
 import com.example.booktracker.Networking.VolleySingleton;
 
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 
 
 public class HomeFragment extends Fragment implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener, BookAdapter.AdapterLister {
 
     private ArrayList<Book> mBookList = new ArrayList<>();
     private ProgressBar mProgressBar;
@@ -96,11 +97,20 @@ public class HomeFragment extends Fragment implements
                         }
                     }
 
-                    BookAdapter adapter = new BookAdapter(mBookList, getContext());
+                    BookAdapter adapter = new BookAdapter(mBookList, getContext(), new BookAdapter.AdapterLister() {
+                        @Override
+                        public void handler(int position) {
+                            Intent intentToBookDetailActivity = new Intent(getActivity(), BookDetailActivity.class);
+                            startActivity(intentToBookDetailActivity);
+                        }
+                    });
+
+                    //BookAdapter adapter = new BookAdapter((mBookList, getContext() , );
                     RecyclerView recyclerView = (RecyclerView) resultView.findViewById(R.id.rv);
+                    //recyclerView.addOnItemTouchListener(new BookAdapter());
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(
-                            new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                            new GridLayoutManager(getContext(), 2));
 
                     mProgressBar.setVisibility(View.GONE);
 
@@ -126,6 +136,12 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+    }
+
+    @Override
+    public void handler(int position) {
+
 
     }
 }

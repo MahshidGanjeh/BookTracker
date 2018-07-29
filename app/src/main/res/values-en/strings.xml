@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">BookTracker</string>
+    <string name="title_activity_setting">Setting</string>
+    <string name="title_item_setting">Setting</string>
+    <string name="title_detail_activity">Details</string>
+    <string name="title_edit_text_pref">Set a daily goal</string>
+    <string name="title_list_pref">Select your favorite genre</string>
+
+    <!--Options of Tab Layout-->
+    <string name="tab_reading">Reading</string>
+    <string name="tab_toRead">ToRead</string>
+    <string name="tab_read">Read</string>
+
+    <!--Options of bottom navigation-->
+    <string name="item_home">Home</string>
+    <string name="item_book_shelf">BookShelf</string>
+    <string name="item_note_book">NoteBook</string>
+    <string name="item_dashborad">Dashboard</string>
+
+    <!-- Array options of listpreference-->
+    <string name="category_love">Love</string>
+    <string name="category_horror">Horror</string>
+    <string name="category_philosophy">Philosophy</string>
+    <string name="category_fiction">Fiction</string>
+    <string name="category_classics">Classics</string>
+    <string name="category_biography">Biography</string>
+    <string name="category_gothic">Gothic</string>
+    <string name="category_fantasy">Fantasy</string>
+
+    <!--Array values of listpreference-->
+    <string name="value_love">love</string>
+    <string name="value_horror">horror</string>
+    <string name="value_philosophy">philosophy</string>
+    <string name="value_fiction">fiction</string>
+    <string name="value_classics">classics</string>
+    <string name="value_biography">biography</string>
+    <string name="value_gothic">gothic</string>
+    <string name="value_default">love</string>
+    <string name="value_fantasy">fantasy</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

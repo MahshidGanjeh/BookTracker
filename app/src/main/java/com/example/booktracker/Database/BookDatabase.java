@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.booktracker.BookAdapter;
 import com.example.booktracker.Networking.Book;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Hp on 2/6/2018.
@@ -31,7 +33,6 @@ public class BookDatabase extends SQLiteOpenHelper {
 
         String SQL_CREATE_BOOK_TABLE =
                 " create table " + BookContract.BookContent.TABLE1_NAME + " ("
-
                         + BookContract.BookContent.COLUMN_BID + " integer primary key autoincrement, "
                         + BookContract.BookContent.COLUMN_TITLE + " nvarchar(80), "
                         + BookContract.BookContent.COLUMN_AUTHOR + " nvarchar(80), "
@@ -44,7 +45,6 @@ public class BookDatabase extends SQLiteOpenHelper {
 
         String SQL_CREATE_USER_TABLE =
                 " create table " + BookContract.BookContent.TABlE2_NAME + " ("
-
                         + BookContract.BookContent.COLUMN_UID + " integer primary key autoincrement, "
                         + BookContract.BookContent.COLUMN_NAME + " nvarchar(20), "
                         + BookContract.BookContent.COLUMN_EMAIL + " nvarchar(40), "
@@ -81,8 +81,8 @@ public class BookDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    //when user clicks the add button ,whole information of the book
-    //will be added to book table and
+    //when user clicks the add(floating action button) button ,whole information of the book
+    //will be added to book table of database and
     //also it will be added to read table with the status of "ToRead"
     public boolean insertBookToDb(Book book) {
 
@@ -104,13 +104,14 @@ public class BookDatabase extends SQLiteOpenHelper {
         String rawQuery2 = " select " + BookContract.BookContent.COLUMN_BID +
                 " from " + BookContract.BookContent.TABLE1_NAME + " where "
                 + BookContract.BookContent.TABLE1_NAME + "." + BookContract.BookContent.COLUMN_TITLE + " = " +
-                "'" + book.getTitle() + "'";
+                " ' " + book.getTitle() + " ' ";
 
         Cursor cursor = db.rawQuery(rawQuery2, null);
 
         if (cursor.moveToFirst()) {
             id = Integer.valueOf(cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_BID)));
         }
+
         //user id
         cv.put(BookContract.BookContent.COLUMN_RCID, 1);
         cv.put(BookContract.BookContent.COLUMN_RBID, id);
@@ -123,6 +124,89 @@ public class BookDatabase extends SQLiteOpenHelper {
         return successfulInsert;
     }
 
+    //if user clicks "start reading" button , the book status will be changed to READING
+    //and the start date of reading will be saved
+
+    public void updateStatus(Book book) {
+
+        int id = 0;
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        //get the id of the inserted book in order to update it to the read table
+        String rawQuery2 = " select " + BookContract.BookContent.COLUMN_BID +
+                " from " + BookContract.BookContent.TABLE1_NAME + " where "
+                + BookContract.BookContent.TABLE1_NAME + "." + BookContract.BookContent.COLUMN_TITLE + " = " +
+                "'" + book.getTitle() + "'";
+
+        Cursor cursor = database.rawQuery(rawQuery2, null);
+
+        if (cursor.moveToFirst()) {
+            id = Integer.valueOf(cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_BID)));
+        }
+
+        ContentValues cv = new ContentValues();
+
+        Date c = Calendar.getInstance().getTime();
+       // Log.d("DATE", "Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c);
+
+        Log.d("DATE", "Current time => "+df.format(c));
+        cv.put(BookContract.BookContent.COLUMN_STATUS, "Reading");
+        cv.put(BookContract.BookContent.COLUMN_STARTDATE, formattedDate);
+
+        //update table read set status = 'Reading' where id = folan
+        database.update(BookContract.BookContent.TABlE3_NAME, cv,
+                BookContract.BookContent.COLUMN_RBID + " = " + id, null);
+    }
+
+    public ArrayList<Book> selectReadingBooks() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //select title, author, coverId from book inner join read on book.id = read.bid where status = Reading
+        String rawQuery = " select " + BookContract.BookContent.COLUMN_TITLE + ", " +
+                BookContract.BookContent.COLUMN_AUTHOR + ", " + BookContract.BookContent.COLUMN_COVERID +
+                " from " + BookContract.BookContent.TABLE1_NAME + " inner join " + BookContract.BookContent.TABlE3_NAME
+                + " on " + BookContract.BookContent.TABLE1_NAME + "." + BookContract.BookContent.COLUMN_BID +
+                " = " + BookContract.BookContent.TABlE3_NAME + "." + BookContract.BookContent.COLUMN_RBID
+                + " where " + BookContract.BookContent.COLUMN_STATUS + " = 'Reading' ";
+
+        Cursor cursor = db.rawQuery(rawQuery, null);
+
+        int numberOfRows = cursor.getCount();
+
+        Book[] books = new Book[numberOfRows];
+        ArrayList<Book> b = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+
+            int i = 0;
+            do {
+                if (cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_COVERID))
+                        == "null") {
+                    continue;
+                } else {
+                    books[i] = new Book(cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_TITLE)),
+                            cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_AUTHOR)),
+                            Integer.valueOf(cursor.getString(
+                                    cursor.getColumnIndex(BookContract.BookContent.COLUMN_COVERID))));
+
+                    // Log.d("ID", cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_BID)));
+                }
+                b.add(books[i]);
+                i++;
+            }
+            while (cursor.moveToNext() && i != numberOfRows);
+        }
+
+        cursor.close();
+        db.close();
+
+        return b;
+    }
+
     public boolean deleteBook(String title) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -133,28 +217,7 @@ public class BookDatabase extends SQLiteOpenHelper {
 
     }
 
-    public void selectToReadBook() {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String rawQuery = " select " + BookContract.BookContent.COLUMN_RBID +
-                " from " + BookContract.BookContent.TABlE3_NAME;
-
-        Cursor cursor = db.rawQuery(rawQuery, null);
-
-        int rowCount = cursor.getCount();
-
-        if (cursor.moveToFirst()) {
-            do {
-                String n = cursor.getString(cursor.getColumnIndex(BookContract.BookContent.COLUMN_RBID));
-                if (n != null) {
-                    Log.d("row", n);
-                }
-            } while (cursor.moveToNext());
-        }
-    }
-
-    //for showing books in the bookshelf we (Query) select the database to get the books information
+    //for showing books in the bookshelf (ToRead Tab) we (Query) select the database to get the books information
     //that have been inserted before
 
     public ArrayList<Book> selectToReadBooks() {

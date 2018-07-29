@@ -1,43 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BookTracker</string>
-    <string name="title_activity_setting">Setting</string>
-    <string name="title_item_setting">Setting</string>
-    <string name="title_edit_text_pref">Set a daily goal</string>
-    <string name="title_list_pref">Select your favorite genre</string>
+    <string name="app_name">کتاب</string>
+    <string name="title_activity_setting">تنظیمات</string>
+    <string name="title_item_setting">تنظیمات</string>
+    <string name="title_detail_activity">جزيیات</string>
+    <string name="title_edit_text_pref">تعیین هدف روزانه</string>
+    <string name="title_list_pref">ژانر موردعلاقه</string>
 
     <!--Options of Tab Layout-->
-    <string name="tab_reading">Reading</string>
-    <string name="tab_toRead">ToRead</string>
-    <string name="tab_read">Read</string>
+    <string name="tab_reading">درحال مطالعه</string>
+    <string name="tab_toRead">برای مطالعه</string>
+    <string name="tab_read">مطالعه شده</string>
 
     <!--Options of bottom navigation-->
-    <string name="item_home">Home</string>
-    <string name="item_book_shelf">BookShelf</string>
-    <string name="item_note_book">NoteBook</string>
-    <string name="item_dashborad">Dashboard</string>
+    <string name="item_home">خانه</string>
+    <string name="item_book_shelf">قفسه کتاب</string>
+    <string name="item_note_book">یادداشت</string>
+    <string name="item_dashborad">پروفایل</string>
 
     <!-- Array options of listpreference-->
-    <string name="category_love">Love</string>
-    <string name="category_horror">Horror</string>
-    <string name="category_philosophy">Philosophy</string>
-    <string name="category_fiction">Fiction</string>
-    <string name="category_classics">Classics</string>
-    <string name="category_biography">Biography</string>
-    <string name="category_gothic">Gothic</string>
+    <string name="category_love">عاشقانه</string>
+    <string name="category_horror">ترسناک</string>
+    <string name="category_philosophy">فلسفی</string>
+    <string name="category_fiction">تخیلی</string>
+    <string name="category_classics">کلاسیک</string>
+    <string name="category_biography">زندگی نامه</string>
+    <string name="category_gothic">حاشیه</string>
+    <string name="category_fantasy">فانتزی</string>
+
 
     <!--Array values of listpreference-->
-    <string name="value_love">love</string>
-    <string name="value_horror">horror</string>
-    <string name="value_philosophy">philosophy</string>
-    <string name="value_fiction">fiction</string>
-    <string name="value_classics">classics</string>
-    <string name="value_biography">biography</string>
-    <string name="value_gothic">gothic</string>
-    <string name="value_default">love</string>
+    <string name="value_love">عاشقانه</string>
+    <string name="value_horror">ترسناک</string>
+    <string name="value_philosophy">فلسفی</string>
+    <string name="value_fiction">تخیلی</string>
+    <string name="value_classics">کلاسیک</string>
+    <string name="value_biography">زندگی نامه</string>
+    <string name="value_gothic">حاشیه</string>
+    <string name="value_default">عاشقانه</string>
+    <string name="value_fantasy">فانتزی</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--text of floating Action button add to bokshelf-->
+    <string name="toast_of_add">با موفقیت به قفسه کتاب اضافه شد:)</string>
 
 
 </resources>

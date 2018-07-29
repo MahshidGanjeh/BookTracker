@@ -1,7 +1,5 @@
-package com.example.booktracker;
+package com.example.booktracker.Fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -13,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.booktracker.R;
 
 
 public class BookShelfFragment extends Fragment {
@@ -52,7 +51,7 @@ public class BookShelfFragment extends Fragment {
 
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new PagerFragment();
+                fragment = new ToReadBookFragment();
             }
             if (position == 1) {
                 fragment = new ReadingFragment();

@@ -2,7 +2,6 @@ package com.example.booktracker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -11,52 +10,49 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
-import com.bumptech.glide.Glide;
+import com.example.booktracker.Fragments.BookShelfFragment;
+import com.example.booktracker.Fragments.DashBoardFragment;
+import com.example.booktracker.Fragments.HomeFragment;
+import com.example.booktracker.Fragments.NoteFragment;
 import com.example.booktracker.Networking.Book;
-import com.example.booktracker.Networking.VolleySingleton;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import fr.arnaudguyon.xmltojsonlib.XmlToJson;
-
-//we implement onSharedPref because we want whenever a pref value changes ,
-//the booklist automatically be updated
+    //we implement onSharedPref because we want whenever a pref value changes ,
+    //the bookList automatically be updated
 public class MainActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static String category = "";
-    public static String URL = "http://openlibrary.org/subjects/" + category + ".json?limit=100";
-    public static String imageUrl = "http://covers.openlibrary.org/b/id/1861101-S.jpg";
+    public static String URL = "http://openlibrary.org/subjects/" + category + ".json?limit=500";
 
+    //public static String imageUrl = "http://covers.openlibrary.org/b/id/1861101-S.jpg";
     //https://www.goodreads.com/search.xml?" +
     //"key=GWMAmEgkrVLUHvbMS1oTpQ&q=city%27s
 
-    private ArrayList<Book> mBookList = new ArrayList<>();
+    //private ArrayList<Book> mBookList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Date c = Calendar.getInstance().getTime();
+        Log.d("DATE", "Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c);
+
+        Log.d("TodayDate", formattedDate);
 
         setTitle(getString(R.string.item_home)); //this will set the title of the action bar
         HomeFragment homeFragment = new HomeFragment();
@@ -64,7 +60,6 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, homeFragment, "Home");
         fragmentTransaction.commit();
-
 
 
         //Setting Up Bottom Navigation
@@ -134,7 +129,8 @@ public class MainActivity extends AppCompatActivity
             Intent intentToSetting = new Intent(this, SettingActivity.class);
             startActivity(intentToSetting);
             return true;
-        }if(id == R.id.search_item){
+        }
+        if (id == R.id.search_item) {
 
 
         }

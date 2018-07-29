@@ -9,6 +9,7 @@ public class Book {
     private String author;
     private int coverImgUrl;
     private int numberOfPage;
+    private String OLID;
 
     public Book() {
 
@@ -18,6 +19,13 @@ public class Book {
         this.title = t;
         this.author = a;
         this.coverImgUrl = i;
+    }
+
+    public Book(String t, String a, int i, String o) {
+        this.title = t;
+        this.author = a;
+        this.coverImgUrl = i;
+        this.OLID = o;
     }
 
     public String getTitle() {
@@ -50,5 +58,13 @@ public class Book {
 
     public void setNumberOfPage(int numberOfPage) {
         this.numberOfPage = numberOfPage;
+    }
+
+    public String getOLID() {
+        return OLID;
+    }
+
+    public void setOLID(String OLID) {
+        this.OLID = OLID;
     }
 }

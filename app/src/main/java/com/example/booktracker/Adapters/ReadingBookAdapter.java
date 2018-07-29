@@ -1,4 +1,4 @@
-package com.example.booktracker;
+package com.example.booktracker.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,45 +10,43 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.booktracker.Networking.Book;
+import com.example.booktracker.R;
 
 import java.util.ArrayList;
 
-public class ToReadBookAdapter extends RecyclerView.Adapter<ToReadBookAdapter.mViewHolder> {
+/**
+ * Created by Hp on 3/6/2018.
+ */
 
-    private ArrayList<Book> mBookList;
-    private LayoutInflater inflater;
-    private Context mContext;
+public class ReadingBookAdapter extends RecyclerView.Adapter<ReadingBookAdapter.myViewHolder> {
 
-    public ToReadBookAdapter() {
+    ArrayList<Book> mBookList;
+    Context mContext;
+    LayoutInflater mLayoutInflater;
 
-    }
-
-    public ToReadBookAdapter(ArrayList<Book> mBookArrayList, Context mContext) {
-
-        this.mBookList = mBookArrayList;
-        this.inflater = LayoutInflater.from(mContext);
-        this.mContext = mContext;
-    }
-
-    @Override
-    public mViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View resultView = inflater.inflate(R.layout.toread_book_item, parent, false);
-
-        mViewHolder viewHolder = new mViewHolder(resultView);
-
-        return viewHolder;
+    public ReadingBookAdapter(ArrayList<Book> mBookList, Context context) {
+        this.mBookList = mBookList;
+        this.mContext = context;
+        mLayoutInflater = LayoutInflater.from(mContext);
     }
 
     @Override
-    public void onBindViewHolder(mViewHolder holder, int position) {
+    public myViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View resultView = mLayoutInflater.inflate(R.layout.reading_book_item, parent, false);
+        myViewHolder myViewHolder = new myViewHolder(resultView);
+
+        return myViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(myViewHolder holder, int position) {
 
         for (int i = 0; i < mBookList.size(); i++) {
             holder.bookTitle.setText(mBookList.get(position).getTitle());
             holder.bookAuthor.setText(mBookList.get(position).getAuthor());
             //Loading images using Glide Library
             //we pass the book_cover_id to do so
-
             Glide.with(mContext)
                     .load("http://covers.openlibrary.org/b/id/" + mBookList.get(position).getCoverImgUrl() + "-M.jpg")
                     .centerCrop()
@@ -61,25 +59,19 @@ public class ToReadBookAdapter extends RecyclerView.Adapter<ToReadBookAdapter.mV
         return mBookList.size();
     }
 
-    public class mViewHolder extends RecyclerView.ViewHolder {
+    class myViewHolder extends RecyclerView.ViewHolder {
 
         private TextView bookTitle;
         private TextView bookAuthor;
         private ImageView bookCoverImage;
-        TextView addToReading;
-        // private ImageView addToBookshelf;
 
-        public mViewHolder(View itemView) {
+        public myViewHolder(View itemView) {
             super(itemView);
             bookTitle = (TextView) itemView.findViewById(R.id.book_title_textview);
             bookAuthor = (TextView) itemView.findViewById(R.id.book_author_textview);
             bookCoverImage = (ImageView) itemView.findViewById(R.id.book_cover_imageview);
-            addToReading = (TextView) itemView.findViewById(R.id.add_to_reading_textview);
 
             //title.setTypeface(type);
-
         }
     }
 }
-
-

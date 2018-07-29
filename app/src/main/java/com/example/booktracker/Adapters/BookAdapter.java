@@ -1,67 +1,35 @@
-package com.example.booktracker;
+package com.example.booktracker.Adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.example.booktracker.Database.BookDatabase;
 import com.example.booktracker.Networking.Book;
+import com.example.booktracker.R;
 
 import java.util.ArrayList;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Hp on 1/8/2018.
  */
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder>
-        implements RecyclerView.OnItemTouchListener {
+public class BookAdapter extends
+        RecyclerView.Adapter<BookAdapter.myViewHolder> {
 
     private ArrayList<Book> BookList;
     private LayoutInflater inflater;
     private Context context;
-    private AdapterLister mAdapterListener;
+    private AdapterListener mAdapterListener;
     Typeface type;
 
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-        View childView = rv.findChildViewUnder(e.getX(), e.getY());
 
-        if (childView != null && mAdapterListener != null) {
-            mAdapterListener.handler(rv.getChildAdapterPosition(childView));
-        }
-
-        return false;
-
-    }
-
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-    }
-
-    public interface AdapterLister {
+    public interface AdapterListener {
 
         public void handler(int position);
     }
@@ -71,13 +39,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder>
 
     }
 
-    public BookAdapter(ArrayList<Book> aBookList, Context context, AdapterLister mAdapterLister) {
+    public BookAdapter(ArrayList<Book> aBookList, Context context, AdapterListener mAdapterListener) {
 
-        this.mAdapterListener = mAdapterLister;
+        this.mAdapterListener = mAdapterListener;
         this.BookList = aBookList;
         inflater = LayoutInflater.from(context);
         this.context = context;
-
     }
 
     @Override
@@ -96,9 +63,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder>
         for (int i = 0; i < BookList.size(); i++) {
             holder.title.setText(BookList.get(position).getTitle());
             holder.author.setText(BookList.get(position).getAuthor());
+
             //Loading images using Glide Library
             //we pass the book_cover_id to do so
-
             Glide.with(context)
                     .load("http://covers.openlibrary.org/b/id/" + BookList.get(position).getCoverImgUrl() + "-M.jpg")
                     .centerCrop()
@@ -148,14 +115,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder>
 */
 
 
-    public class myViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+    public class myViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
         private TextView author;
         private ImageView coverImage;
-        TextView addToBookshelf;
-        // private ImageView addToBookshelf;
 
         public myViewHolder(View itemView) {
 
@@ -165,22 +129,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.myViewHolder>
             coverImage = (ImageView) itemView.findViewById(R.id.book_cover_iv);
 
             //set the listener fo each viewHolder
-            itemView.setOnClickListener(this);
-
-            // addToBookshelf = (TextView) itemView.findViewById(R.id.add_to_bookshelf_imgbtn);
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getPosition();
+                    mAdapterListener.handler(position);
+                }
+            });
             //title.setTypeface(type);
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-            int position = getPosition();
-
-            Toast.makeText(context, "position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
-            mAdapterListener.handler(position);
-
         }
     }
 }

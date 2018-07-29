@@ -15,7 +15,6 @@ import android.support.v7.preference.PreferenceScreen;
 public class SettingFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.setting_fragment);
@@ -33,7 +32,6 @@ public class SettingFragment extends PreferenceFragmentCompat
             String value = sharedPreferences.getString(preference.getKey(), "");
             setPrefSummary(preference, value);
         }
-
     }
 
     //this method gets called whenever a preference has changed
@@ -75,6 +73,4 @@ public class SettingFragment extends PreferenceFragmentCompat
                 .registerOnSharedPreferenceChangeListener(this);
 
     }
-
-
 }

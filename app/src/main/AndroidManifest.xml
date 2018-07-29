@@ -23,7 +23,10 @@
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting" />
 
-        <activity android:name=".BookDetailActivity"></activity>
+        <activity
+            android:name=".BookDetailActivity"
+            android:label="@string/title_detail_activity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>
